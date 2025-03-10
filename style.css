@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f8f9fa;
+}
+
+.sketch-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.tools-panel {
+    padding: 12px 20px;
+    background: #ffffff;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tool-btn {
+    padding: 10px 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #ffffff;
+    color: #495057;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.active-tool {
+    background: #1971c2;
+    color: white !important;
+    border-color: #1971c2;
+}
+
+.draw-area {
+    flex: 1;
+    touch-action: none;
+    background: #ffffff;
+}
+
+.color-picker {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 3px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.color-picker:hover {
+    transform: scale(1.05);
+}
+
+.size-slider {
+    width: 120px;
+    height: 6px;
+    border-radius: 3px;
+    background: #e9ecef;
+    -webkit-appearance: none;
+}
+
+.size-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1971c2;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.size-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.result {
+    margin: 15px;
+    padding: 20px;
+    min-height: 60px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #495057;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.loader {
+    display: none;
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 3px solid #1971c2;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
