@@ -51,7 +51,7 @@ const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-
 
 async function recognizeDrawing() {
   try {
-    const prompt = { // Example prompt structure
+    const prompt = { 
       contents: [{
         parts: [{
           text: "Describe this drawing in detail"
@@ -75,7 +75,6 @@ async function recognizeDrawing() {
     const data = await response.json();
     console.log('API Response:', data);
     
-    // Update your result element
     if(resultElement) {
       resultElement.innerText = data.candidates[0].content.parts[0].text;
     }
