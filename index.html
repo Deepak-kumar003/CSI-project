@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sketch Board</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .sketch-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .draw-area {
+      flex: 1;
+      touch-action: none;
+      background: white;
+    }
+
+    .tools-panel {
+      padding: 10px;
+      background: #f5f5f5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-btn {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .active-tool {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    
+    .color-picker {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+    }
+
+    .size-slider {
+      width: 100px;
+    }
+
+    .loader {
+      display: none;
+      border: 4px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 4px solid #3498db;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+    }
+
+    .result {
+    margin-top: 15px;
+    padding: 12px;
+    min-height: 40px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    background: #e48181;
+    font-family: Arial, sans-serif;
+}
+  </style>
+  
+</head>
+
+<body>
+  <div class="sketch-container">
+    <div class="tools-panel">
+      <input type="color" class="color-picker" value="#000000">
+      <input type="range" class="size-slider" min="1" max="50" value="5">
+      <button class="tool-btn draw-btn active-tool">Draw</button>
+      <button class="tool-btn erase-btn">Erase</button>
+      <!-- <button class="tool-btn text-btn">Text</button> -->
+      <button class="tool-btn clear-btn">Clear</button>
+      <button onclick="recognizeDrawing()">
+        <span class="loader" id="loader"></span>
+        Recognize Drawing
+      </button>
+    </div>
+    <canvas class="draw-area"></canvas>
+    <div id="result">Lorem ipsum dolor sit amet consectetur adipisicing elit. Non magni impedit atque adipisci inventore repellendus voluptas, quae recusandae deleniti eaque, eligendi aut similique veniam eius asperiores culpa nam tenetur dolore!</div>
+  </div>
+  
+
+  <script>
+    const canvas = document.querySelector('.draw-area');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let currentMode = 'draw';
+
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    window.addEventListener('DOMContentLoaded', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
+
+    function startDrawing(e) {
+      e.preventDefault();
+      isDrawing = true;
+      ctx.beginPath();
+      draw(e);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+
+      ctx.lineWidth = document.querySelector('.size-slider').value;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = currentMode === 'erase' ? 'white' :
+        document.querySelector('.color-picker').value;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || e.touches[0].clientX) - rect.left;
+      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+      ctx.beginPath();
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.active-tool')?.classList.remove('active-tool');
+        btn.classList.add('active-tool');
+        currentMode = btn.classList[1].replace('-btn', '');
+
+        if (currentMode === 'text') {
+          const text = prompt('Enter text:');
+          if (text) {
+            ctx.fillStyle = document.querySelector('.color-picker').value;
+            ctx.font = `${document.querySelector('.size-slider').value}px Arial`;
+            ctx.fillText(text, 50, 50);
+          }
+        }
+      });
+    });
+
+    document.querySelector('.clear-btn').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    });
+  </script>
+  
+  <script src="script.js"></script>
+</body>
+
+</html>
